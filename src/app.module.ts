@@ -15,6 +15,20 @@ const getEnv = async () => {
   };
 };
 
+/**
+ * providers:[AppService]의 원형은
+ * provider:[
+ *     {
+ *         provider: Appservice    //고유 Key
+ *         useClass : Appservice   //실제 사용될 Class()
+ *         useValue : "123"       //실제 사용되는 value
+ *         useFactory : ()=>{ return "123"}  //실제 사용되는 함수
+ *     }
+ * ]
+ *
+ * 실제 controller에서 커스텀한 provider를 사용하기 위해선 아래와 같이 작성해야한다.
+ * @Inject("고유 Key") private readonly customClass
+ */
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true, load: [getEnv] })],
   controllers: [AppController],
