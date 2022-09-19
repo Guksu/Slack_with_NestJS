@@ -5,6 +5,10 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 //---------------------------------------------------------//
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { UsersModule } from './users/users.module';
+import { WorkspacesModule } from './workspaces/workspaces.module';
+import { ChannelsModule } from './channels/channels.module';
+import { DmsModule } from './dms/dms.module';
 
 //-----------------------env를 AWS나 외부에서 관리하는 경우에는 load 함수를 사용한다---------------//
 const getEnv = async () => {
@@ -30,7 +34,7 @@ const getEnv = async () => {
  * @Inject("고유 Key") private readonly customClass
  */
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [getEnv] })],
+  imports: [ConfigModule.forRoot({ isGlobal: true, load: [getEnv] }), UsersModule, WorkspacesModule, ChannelsModule, DmsModule],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
