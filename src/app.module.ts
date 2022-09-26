@@ -9,6 +9,8 @@ import { UsersModule } from './users/users.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { async } from 'rxjs';
 
 //-----------------------env를 AWS나 외부에서 관리하는 경우에는 load 함수를 사용한다---------------//
 const getEnv = async () => {
@@ -34,7 +36,28 @@ const getEnv = async () => {
  * @Inject("고유 Key") private readonly customClass
  */
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [getEnv] }), UsersModule, WorkspacesModule, ChannelsModule, DmsModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true, load: [getEnv] }),
+    UsersModule,
+    WorkspacesModule,
+    ChannelsModule,
+    DmsModule,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService], //env를 configservice를 이용하는 경우 이렇게 바꿔야한다.
+      useFactory: async () => {
+        return {
+          type: 'mysql',
+          host: 'localhost',
+          port: 3306,
+          username: 'root',
+          password: 'root',
+          database: 'test',
+          entities: [],
+          synchronize: false, // 해당 사항이 true이면 DB와 동기화가 되므로 테이블 만든 후 false로 바꾸는게 좋다
+        };
+      },
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
