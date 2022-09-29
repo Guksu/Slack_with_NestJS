@@ -11,6 +11,7 @@ import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { async } from 'rxjs';
+import { User } from './common/decorators/user.decorator';
 
 //-----------------------env를 AWS나 외부에서 관리하는 경우에는 load 함수를 사용한다---------------//
 const getEnv = async () => {
@@ -57,6 +58,7 @@ const getEnv = async () => {
         };
       },
     }),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
